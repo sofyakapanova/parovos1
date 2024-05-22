@@ -1,4 +1,3 @@
-
 #include <math.h>
 #include <iostream>
 
@@ -10,42 +9,70 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 
-class MyRectаngle {
-    //Protected — объявляет метод или свойство защищенными.То есть такими, которые не могут быть доступны из объекта, реализующего класс, но вполне может быть использовано в дочерних классах.
-protected: int x, y; int weight, height;
+class MyRectаngle
+{
+protected:
+	int x, y;
+	int weight, height;
 public:
-	void MyRectangle(int _x, int _y, int _weight, int _height) {
-		x = _x; y = _y;
-		weight = _weight; height = _height; }
-	void move(int dx) {x += dx;}
-	//virtual void draw(Graphics^ A) = 0;
+	void MyRectangle(int _x, int _y, int _weight, int _height)
+	{
+		x = _x;
+		y = _y;
+		weight = _weight;
+		height = _height;
+	}
+	void move(int dx)
+	{
+		x += dx;
+	}
+	virtual void draw(Graphics^ A) = 0;
 };
 
-class Wind : public MyRectаngle {
+class wind : public MyRectаngle
+{
 public:
-	Wind(int xl = 0, int yl = 0, int h = 0) {
-		x = xl; y = yl;
-		weight = h * 3; height = h * 3; } // задаем ширину и высоту окна (мы сделали их квадратными)
-	void draw(Graphics^ A) { 
-		A->FillRectangle((Brushes::DeepSkyBlue), x, y, weight, height);
-		A->DrawRectangle(gcnew Pen(Color::Blue), x, y, weight, height); }
+	wind(int xl = 0, int yl = 0, int h = 0)
+	{
+		x = xl;
+		y = yl;
+		weight = h * 3;
+		height = h * 3;
+	}
+	void draw(Graphics^ A)
+	{
+		A->FillRectangle((Brushes::LightBlue), x, y, weight, height);
+		A->DrawRectangle(gcnew Pen(Color::DarkBlue), x, y, weight, height);
+	}
 };
 
-class Door : public MyRectаngle {
+class door : public MyRectаngle
+{
 public:
-	Door(int xl, int yl, int h) {
-		x = xl; y = yl;
-		weight = h * 4; height = h * 7; }
-	void draw(Graphics^ A) {
-		A->FillRectangle((Brushes::MediumSlateBlue), x, y, weight, height);
-		A->DrawRectangle(gcnew Pen(Color::Purple), x, y, weight, height); }
+	door(int xl, int yl, int h)
+	{
+		x = xl;
+		y = yl;
+		weight = h * 4;
+		height = h * 7;
+	}
+	void draw(Graphics^ A)
+	{
+		A->FillRectangle((Brushes::Gray), x, y, weight, height);
+		A->DrawRectangle(gcnew Pen(Color::Black), x, y, weight, height);
+	}
 };
 
-class Korpus : public MyRectаngle {
+class korp : public MyRectаngle
+{
 public:
-	Korpus(int xl, int yl, int h) {
-		x = xl; y = yl;
-		weight = h * 20; height = h * 10; }
+	korp(int xl, int yl, int h)
+	{
+		x = xl;
+		y = yl;
+		weight = h * 20;
+		height = h * 10;
+	}
 	void draw(Graphics^ A)
 	{
 		A->FillRectangle((Brushes::DarkGray), x, y, weight, height);
@@ -80,27 +107,30 @@ public:
 		weight = h * 4;
 		height = h * 4;
 	}
-	void draw(Graphics^ A) {
+	void draw(Graphics^ A)
+	{
 		A->FillEllipse(Brushes::LightYellow, x, y, weight, height);
-		A->DrawEllipse(Pens::Black, x, y, weight, height); }
+		A->DrawEllipse(Pens::Black, x, y, weight, height);
+	}
 };
 
-class van {
+class van
+{
 private:
-	Korpus* c;
-	Door* d;
-	Wind* ws;
+	korp* c;
+	door* d;
+	wind* ws;
 	kol* leftk;
 	kol* rightk;
 public:
 	van(int x = 0, int y = 0, int h = 0)
 	{
-		c = new Korpus(x, y, h);
-		d = new Door(x, y + h * 3, h);
-		ws = new Wind[3];
+		c = new korp(x, y, h);
+		d = new door(x, y + h * 3, h);
+		ws = new wind[3];
 		for (int i = 0; i < 3; i++)
 		{
-			ws[i] = Wind(x + (4 + 2 * (i + 1) + 3 * i) * h, y + 2 * h, h);
+			ws[i] = wind(x + (4 + 2 * (i + 1) + 3 * i) * h, y + 2 * h, h);
 		}
 		leftk = new kol(x + 3 * h, y + 10 * h, h);
 		rightk = new kol(x + 13 * h, y + 10 * h, h);
@@ -108,28 +138,38 @@ public:
 	void draw(Graphics^ g) {
 		c->draw(g);
 		d->draw(g);
-		for (int i = 0; i < 3; i++) { ws[i].draw(g); }
+		for (int i = 0; i < 3; i++)
+		{
+			ws[i].draw(g);
+		}
 		leftk->draw(g);
 		rightk->draw(g);
 	}
 
-	void move(int dx) {
+	void move(int dx)
+	{
 		c->move(dx);
 		d->move(dx);
-		for (int i = 0; i < 3; i++) { ws[i].move(dx); }
+		for (int i = 0; i < 3; i++)
+		{
+			ws[i].move(dx);
+		}
 		leftk->move(dx);
 		rightk->move(dx);
 	}
 };
 
-class Myline {
+class Myline
+{
 private:
 	int x_beg, y_beg, x_end, y_end;
 public:
 	Myline(int x_b = 0, int y_b = 0, int x_e = 0, int y_e = 0)
 	{
-		x_beg = x_b; y_beg = y_b;
-		x_end = x_e; y_end = y_e;
+		x_beg = x_b;
+		y_beg = y_b;
+		x_end = x_e;
+		y_end = y_e;
 	}
 	void DrawMyline(Graphics^ g)
 	{
@@ -137,8 +177,10 @@ public:
 	}
 	void Move(int dxb = 0, int dyb = 0, int dxe = 0, int dye = 0)
 	{
-		x_beg += dxb; y_beg += dyb;
-		x_end += dxe; y_end += dye;
+		x_beg += dxb;
+		y_beg += dyb;
+		x_end += dxe;
+		y_end += dye;
 	}
 };
 
@@ -161,6 +203,7 @@ public:
 
 	void Move(int d_x)
 	{
+		//d_x = d_x + hm;
 		double l = hm;
 		double R = hm * 2;
 		double sina = d_x / R; //математика
@@ -175,7 +218,9 @@ public:
 			dx_m = -dx_m;
 		}
 
-		else if (ym - hm <= ymm && xm < xmm) { dy_m = -dy_m; }
+		else if (ym - hm <= ymm && xm < xmm) {
+			dy_m = -dy_m;
+		}
 		xm += d_x + dx_m;
 		ym += dy_m;
 		xmm += d_x;
@@ -185,14 +230,16 @@ public:
 		right.Move(d_x, 0, d_x + dx_m, dy_m);
 
 	}
-	void draw(Graphics^ g) {
+	void draw(Graphics^ g)
+	{
 		left.DrawMyline(g);
 		middle.DrawMyline(g);
 		right.DrawMyline(g);
 	}
 };
 
-class parovos {
+class parovos
+{
 	van* vagon;
 	truba* tr;
 	Engine* dvijok;
@@ -211,7 +258,8 @@ public:
 	}
 	parovos& operator= (parovos tmp)
 	{
-		delete vagon; delete dvijok;
+		delete vagon;
+		delete dvijok;
 		vagon = tmp.vagon;
 		tr = tmp.tr;
 		dvijok = tmp.dvijok;
@@ -229,10 +277,15 @@ public:
 		dvijok->Move(dx);
 	}
 
-	~parovos() { delete vagon; delete dvijok; }
+	~parovos()
+	{
+		delete vagon;
+		delete dvijok;
+	}
 };
 
-class train {
+class train
+{
 private:
 	parovos* Mai;
 	van* much;
@@ -251,7 +304,8 @@ public:
 		}
 		count = n;
 	}
-	train(const train* tmp) {
+	train(const train* tmp)
+	{
 		count = tmp->count;
 		Mai = tmp->Mai;
 		much = new van[count];
@@ -265,8 +319,10 @@ public:
 
 	train& operator=(train tmp)
 	{
-		if (count != tmp.count) {
-			if (count != 0) {
+		if (count != tmp.count)
+		{
+			if (count != 0)
+			{
 				delete[] much;
 				delete[] lines;
 			}
@@ -274,7 +330,8 @@ public:
 			much = new van[tmp.count];
 			lines = new Myline[tmp.count];
 		}
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < count; i++)
+		{
 			much[i] = tmp.much[i];
 			lines[i] = tmp.lines[i];
 		}
